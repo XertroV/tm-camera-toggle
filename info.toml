@@ -1,0 +1,9 @@
+[meta]
+name     = "Camera Toggle"
+author   = "XertroV"
+category = "Race"
+version  = "0.1.2"
+
+[script]
+#__DEFINES__
+# dependencies = ["MLHook"]
