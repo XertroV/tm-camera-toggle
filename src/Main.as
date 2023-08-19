@@ -2,7 +2,7 @@ void Main() {}
 void OnDestroyed() { }
 void OnDisabled() { OnDestroyed(); }
 
-const string PluginIcon = Icons::Random + Icons::VideoCamera;
+const string PluginIcon = Icons::VideoCamera + Icons::Refresh;
 const string MenuName = PluginIcon + "\\$z " + Meta::ExecutingPlugin().Name;
 
 /** Render function called every frame intended only for menu items in `UI`.
