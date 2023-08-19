@@ -2,7 +2,6 @@
 bool S_Enabled = true;
 
 [Setting category="General" name="Toggle Button"]
-// Button S_Button = Button::L3;
 Button S_Button = Button::L1;
 
 enum CamChoice {
