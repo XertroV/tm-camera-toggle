@@ -8,8 +8,24 @@ const string MenuName = PluginIcon + "\\$z " + Meta::ExecutingPlugin().Name;
 /** Render function called every frame intended only for menu items in `UI`.
 */
 void RenderMenu() {
-    if (UI::MenuItem(MenuName, "", S_Enabled)) {
-        S_Enabled = !S_Enabled;
+    if (UI::BeginMenu(MenuName)) {
+        auto cur = UI::GetCursorPos();
+        UI::Dummy(vec2(150, 0));
+        UI::SetCursorPos(cur);
+        if (UI::MenuItem("Enabled", "", S_Enabled)) {
+            S_Enabled = !S_Enabled;
+        }
+        UI::Separator();
+        if (UI::MenuItem("Mode: Toggle 2 cams", "", S_ToggleMode == ToggleMode::Toggle2)) {
+            S_ToggleMode = ToggleMode::Toggle2;
+        }
+        UI::TextWrapped("\\$888Toggle 2 cams will toggle between your chosen cameras: "+tostring(S_CameraA)+" and "+tostring(S_CameraB)+".");
+        UI::Separator();
+        if (UI::MenuItem("Mode: Toggle 3 cams", "", S_ToggleMode == ToggleMode::Toggle3)) {
+            S_ToggleMode = ToggleMode::Toggle3;
+        }
+        UI::TextWrapped("\\$888Toggle 3 cams toggles between all 3 -- use it to avoid going into settings to rebind.");
+        UI::EndMenu();
     }
 }
 
@@ -94,16 +110,21 @@ void UpdateButtonPressed(uint value, Button button) {
     nextButtonsPressed[button] = nextButtonsPressed[button] || value > 0;
 }
 
-bool toggleState = false;
+uint toggleState = 0;
 
 void CheckForTogglePress() {
     if (newButtonsPressed[S_Button]) {
-        trace('toggling camera');
-        if (toggleState) {
+        // trace('toggling camera');
+        toggleState = (toggleState + 1) % uint(S_ToggleMode);
+        if (toggleState == 0) {
             SetCamChoice(S_CameraA);
-        } else {
+        } else if (toggleState == 1) {
             SetCamChoice(S_CameraB);
+        } else if (toggleState == 2) {
+            SetCamChoice(S_CameraC);
+        } else {
+            SetCamChoice(S_CameraA);
+            warn("Got toggle press but found an invalid toggleState: " + toggleState + " (should 0, 1, or 2)");
         }
-        toggleState = !toggleState;
     }
 }

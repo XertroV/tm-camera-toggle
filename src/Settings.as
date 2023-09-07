@@ -12,11 +12,22 @@ enum CamChoice {
     CamBackwards,
 }
 
+enum ToggleMode {
+    Toggle2 = 2, Toggle3 = 3
+}
+
 [Setting category="General" name="Camera A"]
 CamChoice S_CameraA = CamChoice::Cam1;
 
 [Setting category="General" name="Camera B"]
 CamChoice S_CameraB = CamChoice::Cam2;
+
+[Setting category="General" name="Camera C" description="This is only used when the 'Toggle 3' mode is set."]
+CamChoice S_CameraC = CamChoice::Cam3;
+
+[Setting category="General" name="Toggle Mode" description="Whether to toggle between just Cameras A and B, or between all 3."]
+ToggleMode S_ToggleMode = ToggleMode::Toggle2;
+
 
 [SettingsTab name="Debug"]
 void S_DebugTab() {
