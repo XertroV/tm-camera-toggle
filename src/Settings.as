@@ -29,6 +29,20 @@ CamChoice S_CameraC = CamChoice::Cam3;
 ToggleMode S_ToggleMode = ToggleMode::Toggle2;
 
 
+
+[Setting category="2nd Button" name="Enable 2nd Button?"]
+bool S_SecondButtonEnabled = false;
+
+[Setting category="2nd Button" name="2nd Toggle Button"]
+Button S_SecondButton = Button::L2;
+
+[Setting category="2nd Button" name="Camera A"]
+CamChoice S_SecondCameraA = CamChoice::Cam1;
+
+[Setting category="2nd Button" name="Camera B"]
+CamChoice S_SecondCameraB = CamChoice::Cam2;
+
+
 [SettingsTab name="Debug"]
 void S_DebugTab() {
     UI::TextWrapped("Current Camera: " + GetCameraStatus().ToString());

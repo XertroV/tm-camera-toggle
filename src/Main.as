@@ -30,6 +30,7 @@ void RenderMenu() {
 }
 
 void SetCamChoice(CamChoice cam) {
+    lastSetCamChoice = cam;
     bool alt = cam == CamChoice::Cam1Alt || cam == CamChoice::Cam2Alt || cam == CamChoice::Cam3Alt;
     bool drivable = cam == CamChoice::Cam7Drivable;
     CameraType setTo = cam == CamChoice::Cam1 || cam == CamChoice::Cam1Alt
@@ -111,20 +112,30 @@ void UpdateButtonPressed(uint value, Button button) {
 }
 
 uint toggleState = 0;
+uint toggleState2 = 0;
+CamChoice lastSetCamChoice = CamChoice::CamBackwards;
 
 void CheckForTogglePress() {
-    if (newButtonsPressed[S_Button]) {
+    auto btn1Pressed = newButtonsPressed[S_Button];
+    auto btn2Pressed = S_SecondButtonEnabled && newButtonsPressed[S_SecondButton];
+    CamChoice choice = lastSetCamChoice;
+    if (btn1Pressed) {
         // trace('toggling camera');
         toggleState = (toggleState + 1) % uint(S_ToggleMode);
-        if (toggleState == 0) {
-            SetCamChoice(S_CameraA);
-        } else if (toggleState == 1) {
-            SetCamChoice(S_CameraB);
-        } else if (toggleState == 2) {
-            SetCamChoice(S_CameraC);
-        } else {
-            SetCamChoice(S_CameraA);
-            warn("Got toggle press but found an invalid toggleState: " + toggleState + " (should 0, 1, or 2)");
-        }
+        choice = toggleState == 0 ? S_CameraA : toggleState == 1 ? S_CameraB : S_CameraC;
+        toggleState2 = -1;
+    } else if (btn2Pressed) {
+        toggleState2 = (toggleState2 + 1) % 2;
+        choice = toggleState2 == 0 ? S_SecondCameraA : S_SecondCameraB;
+        toggleState = -1;
+    } else {
+        return;
     }
+
+    if (choice == lastSetCamChoice) {
+        // don't change to the last camera we changed to, just recall this function to increment and return;
+        CheckForTogglePress();
+        return;
+    }
+    SetCamChoice(choice);
 }
