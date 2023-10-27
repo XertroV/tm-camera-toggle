@@ -2,7 +2,8 @@
 name     = "Camera Toggle"
 author   = "XertroV"
 category = "Race"
-version  = "0.1.5"
+version  = "0.1.6"
+siteid = 430
 
 [script]
 #__DEFINES__
