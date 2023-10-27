@@ -29,22 +29,26 @@ void RenderMenu() {
     }
 }
 
+CameraType GetCameraType(CamChoice cam) {
+    if (cam == CamChoice::Cam1 || cam == CamChoice::Cam1Alt) return CameraType::Cam1;
+    if (cam == CamChoice::Cam2 || cam == CamChoice::Cam2Alt) return CameraType::Cam2;
+    if (cam == CamChoice::Cam3 || cam == CamChoice::Cam3Alt) return CameraType::Cam3;
+    if (cam == CamChoice::Cam7 || cam == CamChoice::Cam7Drivable) return CameraType::FreeCam;
+    if (cam == CamChoice::CamBackwards) return CameraType::Backwards;
+    return CameraType::Cam1;
+}
+bool IsAltCam(CamChoice cam) {
+    return cam == CamChoice::Cam1Alt || cam == CamChoice::Cam2Alt || cam == CamChoice::Cam3Alt;
+}
+bool IsDrivableCam(CamChoice cam) {
+    return cam == CamChoice::Cam7Drivable;
+}
+
 void SetCamChoice(CamChoice cam) {
     lastSetCamChoice = cam;
-    bool alt = cam == CamChoice::Cam1Alt || cam == CamChoice::Cam2Alt || cam == CamChoice::Cam3Alt;
-    bool drivable = cam == CamChoice::Cam7Drivable;
-    CameraType setTo = cam == CamChoice::Cam1 || cam == CamChoice::Cam1Alt
-        ? CameraType::Cam1
-        : cam == CamChoice::Cam2 || cam == CamChoice::Cam2Alt
-            ? CameraType::Cam2
-            : cam == CamChoice::Cam3 || cam == CamChoice::Cam3Alt
-                ? CameraType::Cam3
-                : cam == CamChoice::Cam7 || cam == CamChoice::Cam7Drivable
-                    ? CameraType::FreeCam
-                    : cam == CamChoice::CamBackwards
-                        ? CameraType::Backwards
-                        : CameraType::Cam1
-        ;
+    auto setTo = GetCameraType(cam);
+    auto alt = IsAltCam(cam);
+    auto drivable = IsDrivableCam(cam);
     auto app = GetApp();
     SetAltCamFlag(app, alt);
     SetDrivableCamFlag(app, drivable);
