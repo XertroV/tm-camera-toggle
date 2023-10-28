@@ -95,4 +95,40 @@ void SetCamType(CGameCtnApp@ app, CameraType cam) {
     if (gt is null) return;
 	auto setCamNod = Dev::GetOffsetNod(gt, 0x50);
     Dev::SetOffset(setCamNod, 0x4, uint(cam));
+    SetCamNextMap(app, cam);
+}
+
+
+// This governs which camera persists between maps, but does not change the active cam
+void SetCamNextMap(CGameCtnApp@ app, CameraType cam) {
+    auto profile = GetSpecialUserProfile(app);
+    if (profile is null) return;
+    auto bufLen = Dev::GetOffsetUint32(profile, O_UserProfile_CameraLastNodBuf + 0x8);
+    if (bufLen == 0 || bufLen > 20) return;
+    auto cameraSettingPtr = Dev::GetOffsetUint64(profile, O_UserProfile_CameraLastNodBuf) + 0x4;
+    Dev::Write(cameraSettingPtr, uint(cam));
+}
+
+
+// ! -- The below is from Autohide Opponents
+
+
+// user profile
+uint O_UserProfile_CameraLastNodBuf = 0x98;
+
+// updated 2024-04-28: +0x8 to both.
+uint SpecialUserProfileOffset = 0x28;
+
+
+CGameUserProfile@ GetSpecialUserProfile(CGameCtnApp@ app) {
+    // if (!GameVersionSafe) throw("Call to unsafe dev method");
+    auto appTy = Reflection::GetType("CTrackMania");
+    auto rootMapM = appTy.GetMember("RootMap");
+    // orig 0x3a0 = 0x358 + 0x48
+    auto off1 = rootMapM.Offset + 0x48;
+    int[] offsets = {off1, 0, SpecialUserProfileOffset};
+    auto fakeNod1 = Dev::GetOffsetNod(app, offsets[0]);
+    auto fakeNod2 = Dev::GetOffsetNod(fakeNod1, offsets[1]);
+    auto nod3 = Dev::GetOffsetNod(fakeNod2, offsets[2]);
+    return cast<CGameUserProfile>(nod3);
 }
