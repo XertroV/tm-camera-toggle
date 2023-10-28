@@ -28,6 +28,9 @@ CamChoice S_CameraC = CamChoice::Cam3;
 [Setting category="General" name="Toggle Mode" description="Whether to toggle between just Cameras A and B, or between all 3."]
 ToggleMode S_ToggleMode = ToggleMode::Toggle2;
 
+[Setting category="General" name="Persist Camera Between Maps"]
+bool S_PersistCameraBetweenMaps = true;
+
 
 
 [Setting category="2nd Button" name="Enable 2nd Button?"]

@@ -1,4 +1,6 @@
-void Main() {}
+void Main() {
+    startnew(CheckAndSetGameVersionSafe);
+}
 void OnDestroyed() { }
 void OnDisabled() { OnDestroyed(); }
 
@@ -127,11 +129,11 @@ void CheckForTogglePress() {
         // trace('toggling camera');
         toggleState = (toggleState + 1) % uint(S_ToggleMode);
         choice = toggleState == 0 ? S_CameraA : toggleState == 1 ? S_CameraB : S_CameraC;
-        toggleState2 = -1;
+        toggleState2 = uint(-1);
     } else if (btn2Pressed) {
         toggleState2 = (toggleState2 + 1) % 2;
         choice = toggleState2 == 0 ? S_SecondCameraA : S_SecondCameraB;
-        toggleState = -1;
+        toggleState = uint(-1);
     } else {
         return;
     }
@@ -142,4 +144,10 @@ void CheckForTogglePress() {
         return;
     }
     SetCamChoice(choice);
+}
+
+
+void NotifyWarning(const string &in msg) {
+    warn(msg);
+    UI::ShowNotification(Meta::ExecutingPlugin().Name + ": Warning", msg, vec4(.9, .6, .2, .3), 15000);
 }

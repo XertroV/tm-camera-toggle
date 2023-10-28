@@ -95,7 +95,8 @@ void SetCamType(CGameCtnApp@ app, CameraType cam) {
     if (gt is null) return;
 	auto setCamNod = Dev::GetOffsetNod(gt, 0x50);
     Dev::SetOffset(setCamNod, 0x4, uint(cam));
-    SetCamNextMap(app, cam);
+    if (S_PersistCameraBetweenMaps)
+        SetCamNextMap(app, cam);
 }
 
 
@@ -121,7 +122,10 @@ uint SpecialUserProfileOffset = 0x28;
 
 
 CGameUserProfile@ GetSpecialUserProfile(CGameCtnApp@ app) {
-    // if (!GameVersionSafe) throw("Call to unsafe dev method");
+    if (!GameVersionSafe) {
+        // warn("Call to unsafe dev method");
+        return null;
+    }
     auto appTy = Reflection::GetType("CTrackMania");
     auto rootMapM = appTy.GetMember("RootMap");
     // orig 0x3a0 = 0x358 + 0x48
