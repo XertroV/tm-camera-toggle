@@ -124,23 +124,25 @@ CamChoice lastSetCamChoice = CamChoice::CamBackwards;
 void CheckForTogglePress() {
     auto btn1Pressed = newButtonsPressed[S_Button];
     auto btn2Pressed = S_SecondButtonEnabled && newButtonsPressed[S_SecondButton];
-    CamChoice choice = lastSetCamChoice;
+    CamChoice choice, current;
     if (btn1Pressed) {
         // trace('toggling camera');
-        toggleState = (toggleState + 1) % uint(S_ToggleMode);
-        choice = toggleState == 0 ? S_CameraA : toggleState == 1 ? S_CameraB : S_CameraC;
+        current = choice = GetCameraStatus().AsChoice();
+        choice = current;
+        do {
+            toggleState = (toggleState + 1) % uint(S_ToggleMode);
+            choice = toggleState == 0 ? S_CameraA : toggleState == 1 ? S_CameraB : S_CameraC;
+        } while (choice == current && S_CameraA != S_CameraB);
         toggleState2 = uint(-1);
     } else if (btn2Pressed) {
-        toggleState2 = (toggleState2 + 1) % 2;
-        choice = toggleState2 == 0 ? S_SecondCameraA : S_SecondCameraB;
+        current = choice = GetCameraStatus().AsChoice();
+        choice = current;
+        do {
+            choice = toggleState2 == 0 ? S_SecondCameraA : S_SecondCameraB;
+            toggleState2 = (toggleState2 + 1) % 2;
+        } while (choice == current && S_SecondCameraA != S_SecondCameraB);
         toggleState = uint(-1);
     } else {
-        return;
-    }
-
-    if (choice == lastSetCamChoice) {
-        // don't change to the last camera we changed to, just recall this function to increment and return;
-        CheckForTogglePress();
         return;
     }
     SetCamChoice(choice);

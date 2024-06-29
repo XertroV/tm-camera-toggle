@@ -9,7 +9,7 @@ enum CamChoice {
     Cam2, Cam2Alt,
     Cam3, Cam3Alt,
     Cam7, Cam7Drivable,
-    CamBackwards,
+    CamBackwards
 }
 
 enum ToggleMode {

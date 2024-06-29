@@ -13,6 +13,26 @@ class CameraStatus {
         if (currCam == 0) return "None";
         return tostring(CameraType(currCam)) + " [" + tostring(CGameItemModel::EnumDefaultCam(currCam)) + "]" + (isAlt ? " (alt)" : "") + (canDrive ? " (drivable)" : "");
     }
+
+    CamChoice AsChoice() const {
+        if (currCam == 0) return CamChoice::Cam1;
+        if (isAlt) {
+            switch (currCam) {
+                case CameraType::Cam1: return CamChoice::Cam1Alt;
+                case CameraType::Cam2: return CamChoice::Cam2Alt;
+                case CameraType::Cam3: return CamChoice::Cam3Alt;
+            }
+        }
+        switch (currCam) {
+            case CameraType::FreeCam: return canDrive ? CamChoice::Cam7Drivable : CamChoice::Cam7;
+            case CameraType::FreeCam2: return canDrive ? CamChoice::Cam7Drivable : CamChoice::Cam7;
+            case CameraType::Cam1: return CamChoice::Cam1;
+            case CameraType::Cam2: return CamChoice::Cam2;
+            case CameraType::Cam3: return CamChoice::Cam3;
+            case CameraType::Backwards: return CamChoice::CamBackwards;
+        }
+        return CamChoice::Cam1;
+    }
 }
 
 CameraStatus@ GetCameraStatus() {
